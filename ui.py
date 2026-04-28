@@ -9,9 +9,8 @@ from plotly.subplots import make_subplots
 import numpy as np
 import pandas as pd
 
-# ─────────────────────────────────────────────────────────────────────
-# Design tokens
-# ─────────────────────────────────────────────────────────────────────
+
+# Design tokens — colours, typography, and chart defaults
 
 PALETTE = {
     "bg":          "#02040a",
@@ -38,7 +37,7 @@ REGIME_LABELS = [
     ("Breakout",        "#0affef"),
 ]
 
-# Plotly chart base layout
+# Base layout dict applied to every Plotly figure
 CHART_LAYOUT = dict(
     paper_bgcolor=PALETTE["bg"],
     plot_bgcolor=PALETTE["bg"],
@@ -62,9 +61,8 @@ CHART_LAYOUT = dict(
     ),
 )
 
-# ─────────────────────────────────────────────────────────────────────
-# CSS injection
-# ─────────────────────────────────────────────────────────────────────
+
+# Global CSS — injected once on app startup
 
 def inject_css() -> None:
     st.markdown("""
@@ -72,7 +70,6 @@ def inject_css() -> None:
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;600;700;900&display=swap" rel="stylesheet">
 
 <style>
-/* ══ RESET & BASE ══════════════════════════════════════════════════ */
 *, *::before, *::after { box-sizing: border-box; }
 
 html, body, [class*="css"], .stApp {
@@ -89,7 +86,6 @@ html, body, [class*="css"], .stApp {
     min-height: 100vh;
 }
 
-/* Scanline overlay */
 .stApp::before {
     content: '';
     position: fixed;
@@ -105,7 +101,6 @@ html, body, [class*="css"], .stApp {
     z-index: 9999;
 }
 
-/* ══ SIDEBAR ═══════════════════════════════════════════════════════ */
 section[data-testid="stSidebar"] {
     background:
         linear-gradient(180deg, #030810 0%, #020509 100%);
@@ -117,7 +112,6 @@ section[data-testid="stSidebar"] > div {
     padding-top: 1.5rem;
 }
 
-/* ══ TYPOGRAPHY ════════════════════════════════════════════════════ */
 h1 {
     font-family: 'Orbitron', monospace !important;
     color: #c5deff !important;
@@ -148,7 +142,6 @@ h3, h4 {
     letter-spacing: 0.08em !important;
 }
 
-/* ══ METRIC CARDS ══════════════════════════════════════════════════ */
 [data-testid="metric-container"] {
     background: linear-gradient(135deg, #060b14 0%, #080f1c 100%);
     border: 1px solid #0f2040;
@@ -193,7 +186,6 @@ h3, h4 {
     font-size: 0.7rem !important;
 }
 
-/* ══ BUTTONS ═══════════════════════════════════════════════════════ */
 .stButton > button {
     background: transparent !important;
     color: #0affef !important;
@@ -221,7 +213,6 @@ h3, h4 {
     background: rgba(10,255,239,0.15) !important;
 }
 
-/* ══ INPUTS & SELECTS ══════════════════════════════════════════════ */
 .stTextInput input, .stSelectbox select,
 div[data-baseweb="input"] input,
 div[data-baseweb="select"] {
@@ -238,7 +229,6 @@ div[data-baseweb="input"]:focus-within {
     box-shadow: 0 0 0 1px rgba(10,255,239,0.3) !important;
 }
 
-/* Slider */
 div[data-testid="stSlider"] > div > div > div {
     background: #0affef !important;
 }
@@ -249,14 +239,12 @@ div[data-testid="stSlider"] > div > div > div[role="slider"] {
     box-shadow: 0 0 8px rgba(10,255,239,0.5) !important;
 }
 
-/* Radio */
 div[data-testid="stRadio"] label {
     font-family: 'IBM Plex Mono', monospace !important;
     font-size: 0.72rem !important;
     color: #8aafd4 !important;
 }
 
-/* ══ TABS ═══════════════════════════════════════════════════════════ */
 .stTabs [data-baseweb="tab-list"] {
     background: transparent !important;
     border-bottom: 1px solid #0f2040 !important;
@@ -290,12 +278,10 @@ div[data-testid="stRadio"] label {
     background: rgba(10,255,239,0.05) !important;
 }
 
-/* Tab content */
 .stTabs [data-baseweb="tab-panel"] {
     padding-top: 1.5rem !important;
 }
 
-/* ══ DATAFRAMES ════════════════════════════════════════════════════ */
 .stDataFrame {
     border: 1px solid #0f2040 !important;
 }
@@ -305,7 +291,6 @@ div[data-testid="stRadio"] label {
     font-size: 0.7rem !important;
 }
 
-/* ══ ALERTS & BANNERS ══════════════════════════════════════════════ */
 .stAlert {
     border-radius: 0 !important;
     border-left: 2px solid #0f2040 !important;
@@ -314,16 +299,13 @@ div[data-testid="stRadio"] label {
     font-size: 0.75rem !important;
 }
 
-/* ══ PROGRESS ══════════════════════════════════════════════════════ */
 .stProgress > div > div > div {
     background: linear-gradient(90deg, #0affef, #005eff) !important;
     box-shadow: 0 0 8px rgba(10,255,239,0.4) !important;
 }
 
-/* ══ DIVIDER ═══════════════════════════════════════════════════════ */
 hr { border-color: #0f2040 !important; margin: 1rem 0 !important; }
 
-/* ══ CAPTION ═══════════════════════════════════════════════════════ */
 .stCaption {
     font-family: 'IBM Plex Mono', monospace !important;
     font-size: 0.62rem !important;
@@ -331,13 +313,11 @@ hr { border-color: #0f2040 !important; margin: 1rem 0 !important; }
     letter-spacing: 0.08em !important;
 }
 
-/* ══ SCROLLBAR ═════════════════════════════════════════════════════ */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: #02040a; }
 ::-webkit-scrollbar-thumb { background: #0f2040; border-radius: 0; }
 ::-webkit-scrollbar-thumb:hover { background: #1a3560; }
 
-/* ══ CUSTOM COMPONENTS ═════════════════════════════════════════════ */
 .sys-panel {
     background: linear-gradient(135deg, #060b14 0%, #040810 100%);
     border: 1px solid #0f2040;
@@ -497,9 +477,7 @@ hr { border-color: #0f2040 !important; margin: 1rem 0 !important; }
 """, unsafe_allow_html=True)
 
 
-# ─────────────────────────────────────────────────────────────────────
-# HTML component helpers
-# ─────────────────────────────────────────────────────────────────────
+# HTML component helpers — return strings for st.markdown(unsafe_allow_html=True)
 
 def sys_panel(label: str, value: str, color: str = "#c5deff") -> str:
     return f"""
@@ -566,9 +544,7 @@ def wf_stat_card(label: str, value: str, sub: str = "", color: str = "#c5deff") 
     </div>"""
 
 
-# ─────────────────────────────────────────────────────────────────────
-# Chart builders
-# ─────────────────────────────────────────────────────────────────────
+# Chart builders — each returns a Plotly Figure ready for st.plotly_chart
 
 def price_chart(df: pd.DataFrame, meta: dict) -> go.Figure:
     raw = meta["raw"].reindex(df.index)
@@ -598,7 +574,7 @@ def price_chart(df: pd.DataFrame, meta: dict) -> go.Figure:
         name="OHLC",
     ), row=1, col=1)
 
-    # 20/50 MAs
+    # 20 and 50-day moving averages
     c = raw["Close"].squeeze()
     fig.add_trace(go.Scatter(
         x=df.index, y=c.rolling(20).mean(),
@@ -611,7 +587,7 @@ def price_chart(df: pd.DataFrame, meta: dict) -> go.Figure:
         name="MA50",
     ), row=1, col=1)
 
-    # Regime strip
+    # Regime colour strip
     fig.add_trace(go.Bar(
         x=df.index, y=[1] * len(df),
         marker_color=df["color"],
@@ -619,7 +595,7 @@ def price_chart(df: pd.DataFrame, meta: dict) -> go.Figure:
         hovertemplate="%{x|%Y-%m-%d}: " + df["regime"] + "<extra></extra>",
     ), row=2, col=1)
 
-    # RSI
+    # RSI with overbought/oversold reference lines
     fig.add_trace(go.Scatter(
         x=df.index, y=df["rsi"] * 100,
         mode="lines", line=dict(color="#ffb800", width=1),
@@ -732,7 +708,7 @@ def wf_chart(wf: dict, df: pd.DataFrame) -> go.Figure:
         row_heights=[0.75, 0.25], vertical_spacing=0.02,
     )
 
-    # Price in train window
+    # Training window price
     train_df = df.iloc[:cutoff]
     fig.add_trace(go.Scatter(
         x=train_df.index, y=train_df["close"],
@@ -741,7 +717,7 @@ def wf_chart(wf: dict, df: pd.DataFrame) -> go.Figure:
         fillcolor="rgba(58,85,120,0.05)",
     ), row=1, col=1)
 
-    # Price in test window
+    # Out-of-sample test window price
     fig.add_trace(go.Scatter(
         x=test_df.index, y=test_df["close"],
         mode="lines", line=dict(color="#0affef", width=1.5),
@@ -749,29 +725,23 @@ def wf_chart(wf: dict, df: pd.DataFrame) -> go.Figure:
         fillcolor="rgba(10,255,239,0.04)",
     ), row=1, col=1)
 
+    # Vertical line marking the train/test split
     split_date = df.index[cutoff]
     fig.add_shape(
         type="line",
-        x0=split_date,
-        x1=split_date,
-        y0=0,
-        y1=1,
-        xref="x",
-        yref="paper",
+        x0=split_date, x1=split_date,
+        y0=0, y1=1,
+        xref="x", yref="paper",
         line=dict(color="#ffb800", dash="dash", width=1.2),
     )
-
     fig.add_annotation(
-        x=split_date,
-        y=1,
-        yref="paper",
+        x=split_date, y=1, yref="paper",
         text="TRAIN | OOS",
-        showarrow=False,
-        xanchor="left",
+        showarrow=False, xanchor="left",
         font=dict(family="IBM Plex Mono", size=9, color="#ffb800"),
     )
 
-    # OOS regime strip
+    # OOS regime colour strip
     fig.add_trace(go.Bar(
         x=test_df.index, y=[1] * len(test_df),
         marker_color=test_df["oos_color"], showlegend=False,
@@ -798,7 +768,6 @@ def hmm_prob_chart(df: pd.DataFrame, state_probs: np.ndarray,
         color = regime_colors.get(name, "#888888")
         probs = state_probs[:len(df), cid]
 
-        # Build a hex-based fill color
         r, g, b = int(color[1:3], 16), int(color[3:5], 16), int(color[5:7], 16)
         fill_c  = f"rgba({r},{g},{b},0.5)"
 
@@ -872,7 +841,7 @@ def regime_bar_chart(results: dict) -> go.Figure:
 
 
 def feature_heatmap(df: pd.DataFrame) -> go.Figure:
-    """Correlation heatmap of the feature matrix."""
+    """Correlation heatmap of the technical feature matrix."""
     cols = ["ret_1", "ret_5", "ret_20", "vol_5", "vol_20",
             "trend", "ma_gap", "macd", "range_pos", "vol_spike",
             "rsi", "atr", "bb_width", "obv_roc"]
@@ -906,10 +875,11 @@ def feature_heatmap(df: pd.DataFrame) -> go.Figure:
 
 
 def volatility_chart(df: pd.DataFrame) -> go.Figure:
-    """Annualised rolling volatility by regime."""
+    """Annualised rolling volatility coloured by regime."""
     fig = go.Figure()
     ann_vol = df["vol_20"] * (252 ** 0.5) * 100
 
+    # Base vol line in muted colour
     fig.add_trace(go.Scatter(
         x=df.index, y=ann_vol,
         mode="lines", line=dict(color="#3a5578", width=1),
@@ -917,6 +887,7 @@ def volatility_chart(df: pd.DataFrame) -> go.Figure:
         name="Ann. Vol",
     ))
 
+    # Overlay each regime's portion in its own colour
     for regime in df["regime"].unique():
         sub   = df[df["regime"] == regime]
         color = sub["color"].iloc[0]

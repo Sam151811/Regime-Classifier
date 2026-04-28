@@ -1118,9 +1118,6 @@ with tab_macro:
 
         if key_mc:
             mfp_df = macro_regime_analytics(m_df, key_mc).reset_index()
-            mfp_df.insert(1, "Days", [
-                len(m_df[m_df["regime"] == r]) for r in mfp_df["Regime"]
-            ])
             fmt_dict = {c: "{:.4f}" for c in key_mc}
             st.dataframe(
                 mfp_df.style.format(fmt_dict, subset=key_mc),

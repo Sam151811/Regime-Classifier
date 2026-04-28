@@ -296,7 +296,7 @@ def merge_macro_features(
     macro_cols = macro_feats.columns.tolist()
     threshold  = int(len(macro_cols) * 0.7)
     merged     = merged.dropna(subset=macro_cols, thresh=threshold)
-    return merged.fillna(method="ffill").dropna()
+    return merged.ffill().dropna()
 
 
 # Human-readable macro context for display and reports
